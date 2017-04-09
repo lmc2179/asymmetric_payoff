@@ -23,5 +23,4 @@ def calculate_optimal_threshold(y, y_predicted, payoff_matrix):
         if new_utility >= best_utility:
             best_utility, best_threshold = new_utility, t
         current_utility = new_utility
-        print(true_counts[0][i-1], true_counts[1][i-1], t, current_utility)
     return best_threshold

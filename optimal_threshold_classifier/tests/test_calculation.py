@@ -1,6 +1,9 @@
 import unittest
+
 import numpy as np
-from threshold_calculation import calculate_optimal_threshold
+
+from optimal_threshold_classifier.threshold_calculation import calculate_optimal_threshold
+
 
 class PrototypeTest(unittest.TestCase):
     def test_accuracy(self):
