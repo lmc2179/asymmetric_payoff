@@ -3,7 +3,7 @@ from sklearn.linear_model import LogisticRegression
 from matplotlib import pyplot as plt
 import seaborn as sns
 import pandas as pd
-from optimal_threshold_classifier.threshold_calculation import calculate_optimal_threshold
+from asymmetric_payoff.threshold_calculation import calculate_optimal_threshold
 
 n = 200
 X_t = np.concatenate((np.random.normal(-1, 1, n), np.random.normal(1, 1, n)), axis=0)

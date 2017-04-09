@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from optimal_threshold_classifier.threshold_calculation import calculate_optimal_threshold
+from asymmetric_payoff.threshold_calculation import calculate_optimal_threshold
 
 
 class PrototypeTest(unittest.TestCase):

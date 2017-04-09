@@ -1,5 +1,5 @@
 import unittest
-from optimal_threshold_classifier.scoring import confusion_matrix, total_payoff, mean_payoff
+from asymmetric_payoff.scoring import confusion_matrix, total_payoff, mean_payoff
 
 class TestConfusionMatrix(unittest.TestCase):
     def test_each_entry(self):
