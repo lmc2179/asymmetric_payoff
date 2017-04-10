@@ -24,3 +24,24 @@ def calculate_optimal_threshold(y, y_predicted, payoff_matrix):
             best_utility, best_threshold = new_utility, t
         current_utility = new_utility
     return best_threshold
+
+class AsymmetricPayoffClassifier(object):
+    def __init__(self, base_model, payoff_matrix):
+        self.model = base_model
+        self.payoff_matrix = payoff_matrix
+        self.threshold_ = None
+
+    def fit(self, X, y):
+        self.model.fit(X, y)
+        y_predicted = self.model.predict_proba(X)[:,1]
+        self.threshold_ = calculate_optimal_threshold(y, y_predicted, self.payoff_matrix)
+
+    def predict(self, X):
+        y_predicted_proba = self.model.predict_proba(X)[:,1]
+        return np.array([1 if y_p >= self.threshold_ else 0 for y_p in y_predicted_proba])
+
+    def __getattr__(self, item):
+        try:
+            return getattr(self.model, item)
+        except AttributeError:
+            raise AttributeError
