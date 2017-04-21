@@ -15,15 +15,23 @@ class OptimalPayoffThreshold(object):
         true_counts = [y_0, y_1]
         for y_i, t in zip(self.y, self.y_predicted):
             true_counts[y_i][threshold_position[t]] += 1
-        initial_utility = sum(true_counts[0] * self.payoff_matrix[0][1] \
-                              + true_counts[1] * self.payoff_matrix[1][1])
+        best_threshold = self._find_optimal_threshold(zero_transition_cost,
+                                                      one_transition_cost,
+                                                      possible_thresholds,
+                                                      true_counts,
+                                                      self.payoff_matrix)
+        return best_threshold
+
+    def _find_optimal_threshold(self, zero_transition_cost, one_transition_cost, possible_thresholds, true_counts, payoff_matrix):
+        initial_utility = sum(true_counts[0] * payoff_matrix[0][1] \
+                              + true_counts[1] * payoff_matrix[1][1])
         best_utility = initial_utility
         best_threshold = 0
         current_utility = initial_utility
         for i, t in enumerate(possible_thresholds):
             new_utility = true_counts[0][i-1] * zero_transition_cost \
-                        + true_counts[1][i-1] * one_transition_cost \
-                        + current_utility
+                          + true_counts[1][i-1] * one_transition_cost \
+                          + current_utility
             if new_utility >= best_utility:
                 best_utility, best_threshold = new_utility, t
             current_utility = new_utility
