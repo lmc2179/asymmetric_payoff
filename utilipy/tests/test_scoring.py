@@ -1,5 +1,5 @@
 import unittest
-from asymmetric_payoff.scoring import confusion_matrix, total_payoff, mean_payoff
+from utilipy.scoring import confusion_matrix, total_utility, mean_utility, utility, regret
 
 class TestConfusionMatrix(unittest.TestCase):
     def test_each_entry(self):
@@ -17,15 +17,28 @@ class TestConfusionMatrix(unittest.TestCase):
                        [0.25, 0.25]]
         self.assertEqual(cm.tolist(), expected_cm)
 
-class TestPayoff(unittest.TestCase):
+class TestUtility(unittest.TestCase): # TODO: Non-accuracy matrix test cases
+    def test_each_entry_accuracy(self):
+        y, y_pred = [0, 0, 1, 1], [0, 1, 0, 1]
+        payoff_matrix = [[1, 0], [0, 1]]
+        payoff = list(utility(y, y_pred, payoff_matrix))
+        self.assertEqual(payoff, [1, 0, 0, 1])
+
     def test_each_entry_accuracy_total(self):
         y, y_pred = [0, 0, 1, 1], [0, 1, 0, 1]
         payoff_matrix = [[1, 0], [0, 1]]
-        payoff = total_payoff(y, y_pred, payoff_matrix)
+        payoff = total_utility(y, y_pred, payoff_matrix)
         self.assertEqual(payoff, 2)
 
     def test_each_entry_accuracy_mean(self):
         y, y_pred = [0, 0, 1, 1], [0, 1, 0, 1]
         payoff_matrix = [[1, 0], [0, 1]]
-        payoff = mean_payoff(y, y_pred, payoff_matrix)
+        payoff = mean_utility(y, y_pred, payoff_matrix)
         self.assertEqual(payoff, 0.5)
+
+class TestRegret(unittest.TestCase):
+    def test_each_entry_accuracy(self):
+        y, y_pred = [0, 0, 1, 1], [0, 1, 0, 1]
+        payoff_matrix = [[1, 0], [0, 1]]
+        payoff = list(regret(y, y_pred, payoff_matrix))
+        self.assertEqual(payoff, [0, 1, 1, 0])

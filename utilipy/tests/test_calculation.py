@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from asymmetric_payoff.threshold_calculation import OptimalPayoffThreshold, AsymmetricPayoffClassifier
+from utilipy.classification import OptimalUtilityThreshold, MaxUtilityClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
@@ -10,15 +10,15 @@ ACCURACY_MATRIX = np.array([[1, 0], [0, 1]])
 
 class ThresholdCalculationTest(unittest.TestCase):
     def test_accuracy(self):
-        t = OptimalPayoffThreshold(np.array([0, 0, 1, 1]),
+        t = OptimalUtilityThreshold(np.array([0, 0, 1, 1]),
                                     np.array([0.2, 0.4, 0.45, 0.8]),
                                     ACCURACY_MATRIX).calculate_optimal_threshold()
         self.assertEqual(t, 0.45)
 
     def test_accuracy_non_unique(self):
-        t = OptimalPayoffThreshold(np.array([0, 1, 1, 1]),
-                                        np.array([0.2, 0.4, 0.4, 0.8]),
-                                        ACCURACY_MATRIX).calculate_optimal_threshold()
+        t = OptimalUtilityThreshold(np.array([0, 1, 1, 1]),
+                                    np.array([0.2, 0.4, 0.4, 0.8]),
+                                    ACCURACY_MATRIX).calculate_optimal_threshold()
         self.assertEqual(t, 0.40)
 
 class WrapperTest(unittest.TestCase):
@@ -27,7 +27,7 @@ class WrapperTest(unittest.TestCase):
         X_t = np.sort(np.concatenate((np.random.normal(-1, 1, n), np.random.normal(1, 1, n)), axis=0))
         X = X_t.reshape(-1, 1)
         y = [0] * n + [1] * n
-        m = AsymmetricPayoffClassifier(LogisticRegression(), ACCURACY_MATRIX)
+        m = MaxUtilityClassifier(LogisticRegression(), ACCURACY_MATRIX)
         m.fit(X, y)
         self.assertAlmostEqual(m.threshold_, 0.5, delta=0.1)
         y_predicted = m.predict(X)
@@ -42,8 +42,8 @@ class WrapperTest(unittest.TestCase):
         X_t = np.concatenate((np.random.normal(-1, 1, n), np.random.normal(1, 1, n)), axis=0)
         X = X_t.reshape(-1, 1)
         y = [0] * n + [1] * n
-        m = AsymmetricPayoffClassifier(LogisticRegression(), np.array([[1, -5],
-                                                                       [0, 1]]))
+        m = MaxUtilityClassifier(LogisticRegression(), np.array([[1, -5],
+                                                                 [0, 1]]))
         m.fit(X, y)
         self.assertAlmostEqual(m.threshold_, 0.85, delta=0.05)
 
@@ -52,7 +52,7 @@ class WrapperTest(unittest.TestCase):
         X_t = np.concatenate((np.random.normal(-1, 1, n), np.random.normal(1, 1, n)), axis=0)
         X = X_t.reshape(-1, 1)
         y = [0] * n + [1] * n
-        m = AsymmetricPayoffClassifier(LogisticRegression(), np.array([[1,  0],
-                                                                       [-5, 1]]))
+        m = MaxUtilityClassifier(LogisticRegression(), np.array([[1, 0],
+                                                                 [-5, 1]]))
         m.fit(X, y)
         self.assertAlmostEqual(m.threshold_, 0.15, delta=0.05)

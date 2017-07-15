@@ -1,14 +1,14 @@
 import numpy as np
 
-class OptimalPayoffThreshold(object):
-    def __init__(self, y, y_predicted, payoff_matrix):
-        self.y, self.y_predicted, self.payoff_matrix = y, y_predicted, payoff_matrix
+class OptimalUtilityThreshold(object):
+    def __init__(self, y, y_predicted, utility_matrix):
+        self.y, self.y_predicted, self.utility_matrix = y, y_predicted, utility_matrix
 
     def calculate_optimal_threshold(self):
         """"""
         y_pred_sorted, y_sorted = zip(*sorted(zip(self.y_predicted, self.y)))
-        zero_transition_cost = self.payoff_matrix[0][0] - self.payoff_matrix[0][1]
-        one_transition_cost = self.payoff_matrix[1][0] - self.payoff_matrix[1][1]
+        zero_transition_cost = self.utility_matrix[0][0] - self.utility_matrix[0][1]
+        one_transition_cost = self.utility_matrix[1][0] - self.utility_matrix[1][1]
         possible_thresholds = sorted(list(set(y_pred_sorted)))
         threshold_position = {t: i for i,t in enumerate(possible_thresholds)}
         y_0, y_1 = np.zeros(len(possible_thresholds)), np.zeros(len(possible_thresholds)) # TODO: Better name
@@ -19,12 +19,12 @@ class OptimalPayoffThreshold(object):
                                                       one_transition_cost,
                                                       possible_thresholds,
                                                       true_counts,
-                                                      self.payoff_matrix)
+                                                      self.utility_matrix)
         return best_threshold
 
-    def _find_optimal_threshold(self, zero_transition_cost, one_transition_cost, possible_thresholds, true_counts, payoff_matrix):
-        initial_utility = sum(true_counts[0] * payoff_matrix[0][1] \
-                              + true_counts[1] * payoff_matrix[1][1])
+    def _find_optimal_threshold(self, zero_transition_cost, one_transition_cost, possible_thresholds, true_counts, utility_matrix):
+        initial_utility = sum(true_counts[0] * utility_matrix[0][1] \
+                              + true_counts[1] * utility_matrix[1][1])
         best_utility = initial_utility
         best_threshold = 0
         current_utility = initial_utility
@@ -37,16 +37,16 @@ class OptimalPayoffThreshold(object):
             current_utility = new_utility
         return best_threshold
 
-class AsymmetricPayoffClassifier(object):
-    def __init__(self, base_model, payoff_matrix):
+class MaxUtilityClassifier(object):
+    def __init__(self, base_model, utility_matrix):
         self.model = base_model
-        self.payoff_matrix = payoff_matrix
+        self.utility_matrix = utility_matrix
         self.threshold_ = None
 
     def fit(self, X, y):
         self.model.fit(X, y)
         y_predicted = self.model.predict_proba(X)[:,1]
-        self.threshold_ = OptimalPayoffThreshold(y, y_predicted, self.payoff_matrix).calculate_optimal_threshold()
+        self.threshold_ = OptimalUtilityThreshold(y, y_predicted, self.utility_matrix).calculate_optimal_threshold()
 
     def predict(self, X):
         y_predicted_proba = self.model.predict_proba(X)[:,1]
