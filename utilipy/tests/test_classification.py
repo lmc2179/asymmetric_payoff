@@ -2,23 +2,31 @@ import unittest
 
 import numpy as np
 
-from utilipy.classification import OptimalUtilityThreshold, MaxUtilityClassifier
+from utilipy.classification import EmpiricalUtilityThreshold, MaxUtilityClassifier, calculate_optimal_threshold
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
 ACCURACY_MATRIX = np.array([[1, 0], [0, 1]])
 
-class ThresholdCalculationTest(unittest.TestCase):
+class TheoreticalThresholdCalculationTest(unittest.TestCase):
+    def test_theoretical_calculation_accuracy(self):
+        self.assertEqual(calculate_optimal_threshold(ACCURACY_MATRIX), 0.5)
+
+    def test_theoretical_calculation_uneven(self):
+        self.assertEqual(calculate_optimal_threshold(np.array([[2, 0], [0, 1]])), 2./3)
+        self.assertEqual(calculate_optimal_threshold(np.array([[1, 0], [0, 2]])), 1./3)
+
+class EmpiricalThresholdCalculationTest(unittest.TestCase):
     def test_accuracy(self):
-        t = OptimalUtilityThreshold(np.array([0, 0, 1, 1]),
-                                    np.array([0.2, 0.4, 0.45, 0.8]),
-                                    ACCURACY_MATRIX).calculate_optimal_threshold()
+        t = EmpiricalUtilityThreshold(np.array([0, 0, 1, 1]),
+                                      np.array([0.2, 0.4, 0.45, 0.8]),
+                                      ACCURACY_MATRIX).calculate_optimal_threshold()
         self.assertEqual(t, 0.45)
 
     def test_accuracy_non_unique(self):
-        t = OptimalUtilityThreshold(np.array([0, 1, 1, 1]),
-                                    np.array([0.2, 0.4, 0.4, 0.8]),
-                                    ACCURACY_MATRIX).calculate_optimal_threshold()
+        t = EmpiricalUtilityThreshold(np.array([0, 1, 1, 1]),
+                                      np.array([0.2, 0.4, 0.4, 0.8]),
+                                      ACCURACY_MATRIX).calculate_optimal_threshold()
         self.assertEqual(t, 0.40)
 
 class WrapperTest(unittest.TestCase):

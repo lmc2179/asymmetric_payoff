@@ -1,6 +1,9 @@
 import numpy as np
 
-class OptimalUtilityThreshold(object):
+def calculate_optimal_threshold(utility_matrix):
+    return (utility_matrix[0][0] - utility_matrix[0][1]) / (utility_matrix[0][0] + utility_matrix[1][1] - utility_matrix[0][1] - utility_matrix[1][0])
+
+class EmpiricalUtilityThreshold(object):
     def __init__(self, y, y_predicted, utility_matrix):
         self.y, self.y_predicted, self.utility_matrix = y, y_predicted, utility_matrix
 
@@ -46,7 +49,7 @@ class MaxUtilityClassifier(object):
     def fit(self, X, y):
         self.model.fit(X, y)
         y_predicted = self.model.predict_proba(X)[:,1]
-        self.threshold_ = OptimalUtilityThreshold(y, y_predicted, self.utility_matrix).calculate_optimal_threshold()
+        self.threshold_ = EmpiricalUtilityThreshold(y, y_predicted, self.utility_matrix).calculate_optimal_threshold()
 
     def predict(self, X):
         y_predicted_proba = self.model.predict_proba(X)[:,1]
