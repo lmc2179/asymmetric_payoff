@@ -27,4 +27,4 @@ install:
   - python setup.py install
   - pip install .
 # command to run tests
-script: "nosetests asymmetric_payoff/tests"
+script: "nosetests utilipy/tests"
