@@ -6,7 +6,7 @@ from utilipy.classification import EmpiricalUtilityThreshold, MaxUtilityClassifi
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
-ACCURACY_MATRIX = np.array([[1, 0], [0, 1]])
+ACCURACY_MATRIX = np.array([[1., 0.], [0., 1.]])
 
 class TheoreticalThresholdCalculationTest(unittest.TestCase):
     def test_theoretical_calculation_accuracy(self):
