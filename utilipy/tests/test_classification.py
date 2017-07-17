@@ -13,8 +13,8 @@ class TheoreticalThresholdCalculationTest(unittest.TestCase):
         self.assertEqual(calculate_optimal_threshold(ACCURACY_MATRIX), 0.5)
 
     def test_theoretical_calculation_uneven(self):
-        self.assertEqual(calculate_optimal_threshold(np.array([[2, 0], [0, 1]])), 2./3)
-        self.assertEqual(calculate_optimal_threshold(np.array([[1, 0], [0, 2]])), 1./3)
+        self.assertEqual(calculate_optimal_threshold(np.array([[2., 0.], [0., 1.]])), 2./3)
+        self.assertEqual(calculate_optimal_threshold(np.array([[1., 0.], [0., 2.]])), 1./3)
 
 class EmpiricalThresholdCalculationTest(unittest.TestCase):
     def test_accuracy(self):
